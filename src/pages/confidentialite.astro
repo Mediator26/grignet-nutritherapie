@@ -1,0 +1,45 @@
+---
+import PageLegale from '../components/PageLegale.astro';
+import { site } from '../data/site';
+---
+<PageLegale titre="Politique de confidentialité" description="Comment vos données personnelles sont utilisées sur le site de Véronique Grignet." miseAJour="[À COMPLÉTER : date de mise en ligne]">
+  <h2>En résumé</h2>
+  <p>
+    Ce site ne dépose aucun cookie publicitaire ni de mesure d’audience. Les seules données collectées
+    sont celles que vous envoyez volontairement via le formulaire de contact.
+  </p>
+
+  <h2>Responsable du traitement</h2>
+  <p>{site.name}, <a href={`mailto:${site.email}`}>{site.email}</a>, <strong>[À COMPLÉTER : adresse]</strong>.</p>
+
+  <h2>Données collectées et finalité</h2>
+  <p>
+    Via le formulaire de contact : nom, adresse e-mail, téléphone (facultatif), objet et contenu du
+    message. Ces données servent uniquement à répondre à votre demande. Base légale : votre
+    consentement (article 6.1.a du RGPD).
+  </p>
+  <p>
+    Ne transmettez pas d’informations médicales détaillées via le formulaire : nous en parlerons
+    de vive voix lors de la consultation.
+  </p>
+
+  <h2>Destinataires</h2>
+  <p>
+    Les messages sont acheminés par le service <strong>Web3Forms</strong>, qui les transmet par e-mail
+    à {site.name}. Ils ne sont ni vendus, ni cédés, ni utilisés à des fins commerciales.
+  </p>
+
+  <h2>Durée de conservation</h2>
+  <p><strong>[À COMPLÉTER : ex. le temps nécessaire au traitement de la demande, puis au maximum 3 ans sans nouveau contact.]</strong></p>
+
+  <h2>Vos droits</h2>
+  <p>
+    Vous pouvez demander l’accès, la rectification ou la suppression de vos données, ou retirer votre
+    consentement, en écrivant à <a href={`mailto:${site.email}`}>{site.email}</a>. Vous pouvez aussi
+    introduire une réclamation auprès de l’Autorité de protection des données
+    (<a href="https://www.autoriteprotectiondonnees.be" rel="noopener">autoriteprotectiondonnees.be</a>).
+  </p>
+
+  <h2>Polices de caractères et cookies</h2>
+  <p>Les polices sont hébergées sur le site lui-même : aucune connexion à un service tiers n’est faite lors de votre visite.</p>
+</PageLegale>

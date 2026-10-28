@@ -1,0 +1,111 @@
+---
+import { url } from '../../lib/url';
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import PageTitre from '../../components/PageTitre.astro';
+import ConferenceAffiche from '../../components/ConferenceAffiche.astro';
+import { getConferences, formatDateLongue, isoDate } from '../../lib/conferences';
+
+const { aVenir, passees, prochaine } = await getConferences();
+const autres = aVenir.slice(1);
+---
+<Base
+  title="Conférences"
+  description="Les conférences grand public de Véronique Grignet, nutrithérapeute, dans la région de Mons : dates, programmes et inscriptions."
+>
+  <PageTitre
+    surtitre="Conférences"
+    titre="Comprendre, ensemble, ce qui se joue dans notre assiette."
+    chapo="Des soirées grand public, dans la région de Mons, pour comprendre un sujet de santé et repartir avec des conseils concrets."
+  />
+
+  {prochaine ? (
+    <ConferenceAffiche conference={prochaine} />
+  ) : (
+    <section class="section">
+      <div class="conteneur lecture">
+        <p class="chapo">Aucune conférence n’est programmée pour le moment. Les prochaines dates sont annoncées sur Instagram et Facebook.</p>
+      </div>
+    </section>
+  )}
+
+  {autres.length > 0 && (
+    <section class="section">
+      <div class="conteneur">
+        <h2>Également au programme</h2>
+        <ul class="liste-conf">
+          {autres.map((c) => (
+            <li>
+              <time datetime={isoDate(c.data.date)}>{formatDateLongue(c.data.date)}</time>
+              <a href={url(`/conferences/${c.id}/`)}>{c.data.titre}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  {passees.length > 0 && (
+    <section class="section">
+      <div class="conteneur">
+        <span class="surtitre">Archives</span>
+        <h2>Conférences passées</h2>
+        <ul class="liste-conf">
+          {passees.map((c) => (
+            <li>
+              {c.data.affiche && (
+                <Image src={c.data.affiche} alt="" width={160} height={160} class="liste-conf__vignette" />
+              )}
+              <div>
+                <time datetime={isoDate(c.data.date)}>{formatDateLongue(c.data.date)}</time>
+                <a href={url(`/conferences/${c.id}/`)}>{c.data.titre}</a>
+                {c.data.accroche && <p class="secondaire">{c.data.accroche}</p>}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+</Base>
+
+<style>
+  .liste-conf {
+    margin: var(--s-5) 0 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--filet);
+  }
+
+  .liste-conf li {
+    display: flex;
+    gap: var(--s-5);
+    align-items: center;
+    padding-block: var(--s-5);
+    border-bottom: 1px solid var(--filet);
+  }
+
+  .liste-conf time {
+    display: block;
+    font-size: var(--t-xs);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--gris);
+  }
+
+  .liste-conf a {
+    font-family: var(--font-titre);
+    font-size: var(--t-h3);
+    line-height: 1.2;
+  }
+
+  .liste-conf p { margin: var(--s-1) 0 0; }
+
+  .liste-conf__vignette {
+    flex: none;
+    width: 5.5rem;
+    height: 5.5rem;
+    object-fit: cover;
+  }
+</style>

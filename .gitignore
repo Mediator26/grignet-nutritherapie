@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.astro/
+.env
+.claude/
+
+# Fichiers personnels non utilisés par le site
+qrcode-*.png

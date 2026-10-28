@@ -1,0 +1,235 @@
+---
+import { url } from '../lib/url';
+import Logo from './Logo.astro';
+import { site, nav } from '../data/site';
+
+const current = Astro.url.pathname;
+const isCurrent = (href: string) => current === href || current.startsWith(href);
+---
+<header class="entete">
+  <div class="conteneur entete__barre">
+    <a class="marque" href={url('/')} aria-label={`${site.name}, ${site.title} — accueil`}>
+      <span class="marque__logo"><Logo size={44} /></span>
+      <span class="marque__texte">
+        <span class="marque__nom">{site.name}</span>
+        <span class="marque__metier">{site.title} · {site.city}</span>
+      </span>
+    </a>
+
+    <button class="menu-bouton" type="button" aria-expanded="false" aria-controls="navigation">
+      <span class="menu-bouton__trait" aria-hidden="true"></span>
+      Menu
+    </button>
+
+    <nav id="navigation" class="navigation" aria-label="Navigation principale">
+      <ul>
+        {nav.map((item) => (
+          <li>
+            <a href={url(item.href)} aria-current={isCurrent(url(item.href)) ? 'page' : undefined}>{item.label}</a>
+          </li>
+        ))}
+      </ul>
+      <a class="navigation__tel" href={site.phoneHref}>
+        <span class="visually-hidden">Appeler le </span>{site.phone}
+      </a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const bouton = document.querySelector<HTMLButtonElement>('.menu-bouton');
+  const menu = document.getElementById('navigation');
+  if (bouton && menu) {
+    const fermer = () => {
+      bouton.setAttribute('aria-expanded', 'false');
+      document.documentElement.classList.remove('menu-ouvert');
+    };
+    bouton.addEventListener('click', () => {
+      const ouvert = bouton.getAttribute('aria-expanded') === 'true';
+      bouton.setAttribute('aria-expanded', String(!ouvert));
+      document.documentElement.classList.toggle('menu-ouvert', !ouvert);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && bouton.getAttribute('aria-expanded') === 'true') {
+        fermer();
+        bouton.focus();
+      }
+    });
+  }
+</script>
+
+<style>
+  .entete {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--papier);
+    border-bottom: 1px solid var(--filet);
+  }
+
+  .entete__barre {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-5);
+    min-height: 4.75rem;
+  }
+
+  .marque {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    color: var(--encre);
+    text-decoration: none;
+  }
+
+  .marque:hover { color: var(--encre); }
+
+  .marque__logo { color: var(--vert); }
+
+  .marque__texte { display: grid; line-height: 1.15; }
+
+  .marque__nom {
+    font-family: var(--font-titre);
+    font-size: 1.4rem;
+    font-weight: 500;
+  }
+
+  .marque__metier {
+    font-size: var(--t-xs);
+    color: var(--gris);
+    letter-spacing: 0.02em;
+  }
+
+  .navigation ul {
+    display: flex;
+    gap: var(--s-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .navigation a {
+    display: inline-block;
+    padding: var(--s-3) var(--s-3);
+    color: var(--encre);
+    font-weight: 700;
+    font-size: var(--t-s);
+    text-decoration: none;
+  }
+
+  .navigation a:hover {
+    color: var(--vert);
+    text-decoration: underline;
+    text-decoration-color: var(--rouge);
+  }
+
+  .navigation a[aria-current='page'] {
+    text-decoration: underline;
+    text-decoration-color: var(--rouge);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.45em;
+  }
+
+  .navigation {
+    display: flex;
+    align-items: center;
+    gap: var(--s-4);
+  }
+
+  .navigation .navigation__tel {
+    padding: var(--s-2) var(--s-4);
+    border: 2px solid var(--vert);
+    border-radius: var(--rayon);
+    color: var(--vert);
+    white-space: nowrap;
+  }
+
+  .navigation .navigation__tel:hover {
+    background: var(--vert);
+    color: var(--blanc);
+    text-decoration: none;
+  }
+
+  .menu-bouton { display: none; }
+
+  /* Mobile et tablette : menu en panneau plein écran (seulement si JavaScript est actif) */
+  @media (max-width: 63.99em) {
+    :global(.js) .menu-bouton {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-3);
+      min-height: 3rem;
+      padding: var(--s-2) var(--s-4);
+      border: 2px solid var(--vert);
+      border-radius: var(--rayon);
+      background: var(--blanc);
+      color: var(--vert);
+      font: 700 var(--t-s) / 1 var(--font-texte);
+      cursor: pointer;
+    }
+
+    .menu-bouton__trait,
+    .menu-bouton__trait::before {
+      display: block;
+      width: 1.1rem;
+      height: 2px;
+      background: currentColor;
+      position: relative;
+    }
+
+    .menu-bouton__trait { box-shadow: 0 -6px 0 currentColor; }
+    .menu-bouton__trait::before { content: ''; top: 6px; }
+
+    .navigation {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    :global(.js) .navigation {
+      display: none;
+    }
+
+    :global(.js.menu-ouvert) .navigation {
+      display: flex;
+      position: fixed;
+      inset: 4.75rem 0 0 0;
+      padding: var(--s-6) var(--gouttiere);
+      background: var(--papier);
+      overflow-y: auto;
+    }
+
+    :global(.menu-ouvert) body { overflow: hidden; }
+
+    .navigation ul { flex-direction: column; gap: 0; }
+
+    .navigation li { border-bottom: 1px solid var(--filet); }
+
+    .navigation a {
+      display: block;
+      padding: var(--s-4) 0;
+      font-family: var(--font-titre);
+      font-weight: 500;
+      font-size: 1.75rem;
+    }
+
+    .navigation .navigation__tel {
+      margin-top: var(--s-6);
+      padding: var(--s-4);
+      text-align: center;
+      font-family: var(--font-texte);
+      font-weight: 700;
+      font-size: var(--t-m);
+    }
+
+    .entete__barre { min-height: 4.75rem; }
+  }
+
+  @media (max-width: 30em) {
+    .marque__nom { font-size: 1.2rem; white-space: nowrap; }
+  }
+
+  @media (max-width: 22em) {
+    .marque__logo { display: none; }
+  }
+</style>

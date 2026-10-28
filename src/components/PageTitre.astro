@@ -1,0 +1,24 @@
+---
+// En-tête de page intérieure : surtitre, titre, chapô.
+interface Props { surtitre: string; titre: string; chapo?: string }
+const { surtitre, titre, chapo } = Astro.props;
+---
+<header class="page-titre">
+  <div class="conteneur">
+    <span class="surtitre">{surtitre}</span>
+    <h1>{titre}</h1>
+    {chapo && <p class="chapo">{chapo}</p>}
+    <slot />
+  </div>
+</header>
+
+<style>
+  .page-titre {
+    padding-block: clamp(var(--s-7), 7vw, var(--s-9)) var(--s-7);
+    border-bottom: 1px solid var(--filet);
+  }
+
+  .page-titre h1 { max-width: 16em; }
+
+  .page-titre .chapo { margin-top: var(--s-5); margin-bottom: 0; }
+</style>

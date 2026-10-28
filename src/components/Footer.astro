@@ -1,0 +1,118 @@
+---
+import { url } from '../lib/url';
+import Logo from './Logo.astro';
+import { site, nav } from '../data/site';
+const annee = new Date().getFullYear();
+---
+<footer class="pied sur-vert">
+  <div class="conteneur">
+    <div class="pied__haut">
+      <div class="pied__marque">
+        <Logo size={56} />
+        <p class="pied__nom">{site.name}<br /><span>{site.title} à {site.city}</span></p>
+      </div>
+
+      <div class="pied__bloc">
+        <h2 class="pied__titre">Me joindre</h2>
+        <p>
+          <a href={site.phoneHref}>{site.phone}</a> (appel ou SMS)<br />
+          <a href={`mailto:${site.email}`}>{site.email}</a><br />
+          {site.city}, {site.region}
+        </p>
+      </div>
+
+      <nav class="pied__bloc" aria-label="Plan du site">
+        <h2 class="pied__titre">Le site</h2>
+        <ul>
+          <li><a href={url('/')}>Accueil</a></li>
+          {nav.map((item) => <li><a href={url(item.href)}>{item.label}</a></li>)}
+        </ul>
+      </nav>
+
+      <div class="pied__bloc">
+        <h2 class="pied__titre">Me suivre</h2>
+        <ul>
+          <li><a href={site.instagram} rel="noopener">Instagram</a></li>
+          <li><a href={site.facebook} rel="noopener">Facebook</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="pied__avertissement">
+      La nutrithérapie accompagne et complète un suivi médical, elle ne le remplace pas.
+      Ne modifiez ni n'arrêtez jamais un traitement sans l'avis de votre médecin.
+    </p>
+
+    <div class="pied__bas">
+      <p>© {annee} {site.name}</p>
+      <ul>
+        <li><a href={url('/mentions-legales/')}>Mentions légales</a></li>
+        <li><a href={url('/confidentialite/')}>Confidentialité</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .pied {
+    padding-block: var(--s-8) var(--s-6);
+    font-size: var(--t-s);
+  }
+
+  .pied__haut {
+    display: grid;
+    gap: var(--s-6);
+  }
+
+  @media (min-width: 48em) {
+    .pied__haut { grid-template-columns: 1.4fr 1.4fr 1fr 1fr; }
+  }
+
+  .pied__marque { display: grid; gap: var(--s-4); align-content: start; }
+
+  .pied__nom {
+    font-family: var(--font-titre);
+    font-size: 1.6rem;
+    line-height: 1.15;
+  }
+
+  .pied__nom span {
+    font-family: var(--font-texte);
+    font-size: var(--t-s);
+    color: var(--emeraude-clair);
+  }
+
+  .pied__titre {
+    font-family: var(--font-texte);
+    font-size: var(--t-xs);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--emeraude-clair);
+    margin-bottom: var(--s-3);
+  }
+
+  .pied ul { list-style: none; padding: 0; margin: 0; }
+  .pied li + li { margin-top: var(--s-2); }
+
+  .pied__avertissement {
+    margin-top: var(--s-7);
+    padding-top: var(--s-5);
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    max-width: 48em;
+    color: var(--emeraude-clair);
+  }
+
+  .pied__bas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--s-4);
+    margin-top: var(--s-5);
+    font-size: var(--t-xs);
+  }
+
+  .pied__bas p { margin: 0; }
+  .pied__bas ul { display: flex; gap: var(--s-5); }
+  .pied__bas li + li { margin-top: 0; }
+</style>

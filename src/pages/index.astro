@@ -1,0 +1,437 @@
+---
+import { url } from '../lib/url';
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import WaveRule from '../components/WaveRule.astro';
+import ACompleter from '../components/ACompleter.astro';
+import ConferenceAffiche from '../components/ConferenceAffiche.astro';
+import { site } from '../data/site';
+import { getConferences } from '../lib/conferences';
+
+import tartine from '../assets/photos/tartine-tomates-carottes.jpg';
+import portrait from '../assets/photos/portrait-profil-150.jpg';
+import gouter from '../assets/photos/gouter-pancake-skyr.jpg';
+import courge from '../assets/photos/courge-tofu-epinards.jpg';
+import recolte from '../assets/photos/recolte-poivrons-tomates.jpg';
+
+const { prochaine } = await getConferences();
+
+const principes = [
+  {
+    titre: 'Comprendre avant de changer',
+    texte:
+      "Je suis éducatrice de santé : je prends le temps d'expliquer, simplement, ce qui se passe dans votre corps et dans votre assiette. Quand on comprend le pourquoi, les changements tiennent.",
+  },
+  {
+    titre: 'Avancer à votre rythme',
+    texte:
+      "Pas de bouleversement du jour au lendemain. On part de vos habitudes, de vos goûts et de votre quotidien pour construire, pas à pas, un changement alimentaire durable.",
+  },
+  {
+    titre: 'Passer à l’assiette',
+    texte:
+      'Des repères concrets et des idées de repas faciles, de saison, comme celles que je partage chaque semaine sur Instagram.',
+  },
+];
+
+const sujets = ['Microbiote', 'Digestion', 'Inflammation', 'Sommeil', 'Stress', 'Énergie', 'Bien vieillir'];
+---
+<Base>
+  <!-- Ouverture -->
+  <section class="ouverture" aria-labelledby="titre-accueil">
+    <div class="conteneur ouverture__grille">
+      <div class="ouverture__texte">
+        <span class="surtitre">{site.title} à {site.city}</span>
+        <h1 id="titre-accueil">Changer d’alimentation durablement, <em>à votre rythme.</em></h1>
+        <p class="chapo">
+          Je suis Véronique Grignet, éducatrice de santé. Je vous guide vers une alimentation qui vous
+          fait du bien, avec des explications claires et des repères concrets pour le quotidien.
+        </p>
+        <div class="actions">
+          <a class="bouton" href={url('/contact/')}>Prendre contact</a>
+          <a class="bouton bouton--contour" href={url('/accompagnement/')}>Comment je vous accompagne</a>
+        </div>
+        <p class="ouverture__tel secondaire">
+          Ou appelez-moi directement au <a href={site.phoneHref}>{site.phone}</a>.
+        </p>
+      </div>
+
+      <div class="ouverture__visuel">
+        <figure class="ouverture__photo">
+          <Image
+            src={tartine}
+            alt="Tartines de pain complet garnies de fromage frais, carottes râpées et tomates cerises."
+            widths={[400, 640]}
+            sizes="(min-width: 64em) 34vw, 90vw"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </figure>
+        <figure class="ouverture__portrait">
+          <Image src={portrait} alt="Véronique Grignet, en veste verte et lunettes noires." width={150} height={150} />
+          <figcaption>Véronique Grignet<br /><span>Nutrithérapeute</span></figcaption>
+        </figure>
+      </div>
+    </div>
+    <WaveRule class="ouverture__vague" />
+  </section>
+
+  <!-- Approche -->
+  <section class="section approche" aria-labelledby="titre-approche">
+    <div class="conteneur grille">
+      <div class="approche__intro">
+        <span class="surtitre">Ma façon de travailler</span>
+        <h2 id="titre-approche">Pas de régime, une éducation à la santé.</h2>
+        <ACompleter label="À valider">
+          <p>Ces trois principes sont rédigés à partir de sa présentation sur les réseaux sociaux. À relire avec elle.</p>
+        </ACompleter>
+      </div>
+      <ol class="approche__liste">
+        {principes.map((p, i) => (
+          <li>
+            <span class="approche__numero" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <div>
+              <h3>{p.titre}</h3>
+              <p>{p.texte}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- Sujets -->
+  <section class="section sur-brume sujets" aria-labelledby="titre-sujets">
+    <div class="conteneur grille">
+      <div class="sujets__intro">
+        <span class="surtitre">Les sujets dont je parle</span>
+        <h2 id="titre-sujets" class="visually-hidden">Les sujets dont je parle</h2>
+        <p class="sujets__liste">
+          {sujets.map((s, i) => (
+            <>
+              <span>{s}</span>
+              {i < sujets.length - 1 && <span class="sujets__sep" aria-hidden="true"> / </span>}
+            </>
+          ))}
+        </p>
+      </div>
+      <div class="sujets__public">
+        <h3>À qui s’adresse l’accompagnement ?</h3>
+        <ACompleter label="À compléter avec Véronique">
+          <p>
+            Décrire en deux ou trois phrases les personnes qu'elle accompagne et les demandes les plus
+            fréquentes (ex. inconfort digestif, fatigue, envie de mieux manger après 50 ans…). Rien n'est
+            indiqué publiquement à ce sujet : à confirmer avant publication.
+          </p>
+        </ACompleter>
+        <p><a href={url('/accompagnement/')}>Voir le déroulement d’un accompagnement</a></p>
+      </div>
+    </div>
+  </section>
+
+  {prochaine && <ConferenceAffiche conference={prochaine} />}
+
+  <!-- Dans mon assiette -->
+  <section class="section assiette" aria-labelledby="titre-assiette">
+    <div class="conteneur">
+      <div class="assiette__entete">
+        <div>
+          <span class="surtitre">Dans mon assiette</span>
+          <h2 id="titre-assiette">Simple, de saison, et coloré.</h2>
+        </div>
+        <p class="lecture">
+          Sur Instagram, je partage ce que je cuisine au quotidien : des assiettes faciles qui montrent
+          que bien manger n'a rien de compliqué.{' '}
+          <a href={site.instagram} rel="noopener">Suivre @grignet_nutritherapie</a>
+        </p>
+      </div>
+
+      <div class="assiette__mosaique">
+        <figure class="assiette__a">
+          <Image src={gouter} alt="Pancakes à la pâte de dattes et éclats de chocolat, nappés de skyr, tranches de banane et graines de courge." widths={[400, 640]} sizes="(min-width: 64em) 40vw, 92vw" />
+          <figcaption class="legende">Goûter d’automne : pancake à la pâte de dattes, skyr nature, banane et graines de courge.</figcaption>
+        </figure>
+        <figure class="assiette__b">
+          <Image src={courge} alt="Courge rôtie garnie de dés de tofu, d’épinards et de champignons." widths={[400, 640]} sizes="(min-width: 64em) 28vw, 92vw" />
+          <figcaption class="legende">Courge rôtie, tofu, épinards et champignons.</figcaption>
+        </figure>
+        <figure class="assiette__c">
+          <Image src={recolte} alt="Récolte de poivrons et de tomates cerises colorés posés sur une table." widths={[400, 640]} sizes="(min-width: 64em) 24vw, 92vw" />
+          <figcaption class="legende">Poivrons et tomates cerises de la récolte.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- Presse -->
+  <section class="presse" aria-labelledby="titre-presse">
+    <div class="conteneur presse__ligne">
+      <h2 id="titre-presse" class="surtitre">Vu dans la presse</h2>
+      <p>
+        <cite>« Pour redécouvrir les légumes d’automne et d’hiver »</cite>, article de Lucie Jannet,{' '}
+        <span class="presse__titre">La Province / Sudinfo</span>, octobre 2026.
+      </p>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="section contact-accueil" aria-labelledby="titre-contact">
+    <div class="conteneur grille">
+      <div class="contact-accueil__texte">
+        <h2 id="titre-contact">Une question, un premier rendez-vous ?</h2>
+        <p class="chapo">Le plus simple est de m’appeler ou de m’envoyer un SMS. Je vous réponds personnellement.</p>
+      </div>
+      <div class="contact-accueil__coord">
+        <a class="contact-accueil__tel" href={site.phoneHref}>{site.phone}</a>
+        <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+        <p class="secondaire">{site.city}, {site.region}</p>
+        <a class="bouton" href={url('/contact/')}>Écrire un message</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* Ouverture */
+  .ouverture {
+    position: relative;
+    padding-top: clamp(var(--s-6), 6vw, var(--s-8));
+    overflow: hidden;
+  }
+
+  .ouverture__grille {
+    display: grid;
+    gap: var(--s-7);
+  }
+
+  @media (min-width: 64em) {
+    .ouverture__grille {
+      grid-template-columns: 7fr 5fr;
+      gap: var(--s-7);
+      align-items: end;
+    }
+  }
+
+  .ouverture h1 em {
+    font-style: italic;
+    color: var(--vert);
+  }
+
+  .ouverture .chapo { margin-block: var(--s-5) var(--s-6); }
+
+  .ouverture__tel { margin-top: var(--s-5); }
+
+  .ouverture__texte { padding-bottom: var(--s-7); }
+
+  .ouverture__visuel {
+    position: relative;
+    padding: var(--s-6) 0 0 var(--s-6);
+  }
+
+  /* Aplat vert qui sort du cadre à droite, comme sur ses affiches */
+  .ouverture__visuel::before {
+    content: '';
+    position: absolute;
+    inset: 0 calc(-1 * var(--gouttiere) - 50vw) 0 0;
+    background: var(--vert);
+  }
+
+  .ouverture__photo {
+    position: relative;
+    margin: 0;
+    max-width: 30rem;
+  }
+
+  .ouverture__photo img {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+
+  .ouverture__portrait {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--s-4);
+    margin: calc(-1 * var(--s-7)) 0 0 calc(-1 * var(--s-6));
+    padding: var(--s-4) var(--s-6) var(--s-5) 0;
+    color: var(--blanc);
+  }
+
+  .ouverture__portrait img {
+    width: 7.5rem;
+    height: 7.5rem;
+    object-fit: cover;
+    border: 4px solid var(--papier);
+  }
+
+  .ouverture__portrait figcaption {
+    margin-top: var(--s-6);
+    font-family: var(--font-titre);
+    font-size: 1.25rem;
+    line-height: 1.2;
+  }
+
+  .ouverture__portrait span {
+    font-family: var(--font-texte);
+    font-size: var(--t-xs);
+    color: var(--emeraude-clair);
+  }
+
+  .ouverture :global(.ouverture__vague) {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: var(--s-4);
+    pointer-events: none;
+    width: 62%;
+    height: 2rem;
+  }
+
+  @media (max-width: 63.99em) {
+    .ouverture :global(.ouverture__vague) { display: none; }
+    .ouverture__texte { padding-bottom: 0; }
+  }
+
+  /* Approche */
+  .approche__intro {
+    grid-column: 1 / -1;
+    margin-bottom: var(--s-6);
+  }
+
+  .approche__liste {
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--filet);
+  }
+
+  @media (min-width: 64em) {
+    .approche__intro { grid-column: 1 / span 4; position: sticky; top: 7rem; align-self: start; }
+    .approche__liste { grid-column: 6 / span 7; }
+  }
+
+  .approche__liste li {
+    display: grid;
+    grid-template-columns: 3.5rem 1fr;
+    gap: var(--s-4);
+    padding-block: var(--s-6);
+    border-bottom: 1px solid var(--filet);
+  }
+
+  .approche__numero {
+    font-family: var(--font-titre);
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--emeraude);
+  }
+
+  .approche__liste p { margin: 0; max-width: 36em; }
+
+  /* Sujets */
+  .sujets__intro { grid-column: 1 / -1; }
+  .sujets__public { grid-column: 1 / -1; margin-top: var(--s-6); }
+
+  @media (min-width: 64em) {
+    .sujets__intro { grid-column: 1 / span 7; }
+    .sujets__public { grid-column: 9 / span 4; margin-top: 0; }
+  }
+
+  .sujets__liste {
+    font-family: var(--font-titre);
+    font-size: clamp(2rem, 1.4rem + 2.6vw, 3.6rem);
+    font-style: italic;
+    line-height: 1.15;
+    color: var(--vert);
+    margin: 0;
+  }
+
+  .sujets__sep { color: var(--rouge); font-style: normal; }
+
+  /* Assiette */
+  .assiette__entete {
+    display: grid;
+    gap: var(--s-4);
+    margin-bottom: var(--s-7);
+  }
+
+  @media (min-width: 64em) {
+    .assiette__entete { grid-template-columns: 5fr 6fr; gap: var(--s-8); align-items: end; }
+    .assiette__entete p { margin: 0; }
+  }
+
+  .assiette__mosaique {
+    display: grid;
+    gap: var(--s-6);
+  }
+
+  .assiette__mosaique figure { margin: 0; }
+
+  .assiette__mosaique img { width: 100%; object-fit: cover; }
+
+  @media (min-width: 48em) {
+    .assiette__mosaique {
+      grid-template-columns: repeat(12, 1fr);
+      gap: var(--s-5);
+      align-items: start;
+    }
+    .assiette__a { grid-column: 1 / span 6; }
+    .assiette__a img { aspect-ratio: 1; }
+    .assiette__b { grid-column: 7 / span 6; margin-top: var(--s-8) !important; }
+    .assiette__b img { aspect-ratio: 4 / 3; }
+    .assiette__c { grid-column: 3 / span 5; }
+    .assiette__c img { aspect-ratio: 4 / 3; }
+  }
+
+  @media (min-width: 64em) {
+    .assiette__a { grid-column: 1 / span 5; grid-row: 1 / span 2; }
+    .assiette__b { grid-column: 6 / span 4; margin-top: var(--s-8) !important; }
+    .assiette__c { grid-column: 10 / span 3; margin-top: var(--s-9) !important; }
+    .assiette__c img { aspect-ratio: 3 / 4; }
+  }
+
+  /* Presse */
+  .presse__ligne {
+    display: grid;
+    gap: var(--s-2);
+    padding-block: var(--s-6);
+    border-block: 1px solid var(--filet);
+  }
+
+  @media (min-width: 48em) {
+    .presse__ligne { grid-template-columns: 14rem 1fr; gap: var(--s-6); align-items: baseline; }
+  }
+
+  .presse h2 { margin: 0; }
+
+  .presse p { margin: 0; font-size: var(--t-l); }
+
+  .presse cite { font-family: var(--font-titre); font-style: italic; }
+
+  .presse__titre { font-weight: 700; }
+
+  /* Contact */
+  .contact-accueil__texte { grid-column: 1 / -1; }
+  .contact-accueil__coord { grid-column: 1 / -1; }
+
+  @media (min-width: 64em) {
+    .contact-accueil__texte { grid-column: 1 / span 6; }
+    .contact-accueil__coord { grid-column: 8 / span 5; }
+  }
+
+  .contact-accueil__tel {
+    display: inline-block;
+    margin-bottom: var(--s-3);
+    font-family: var(--font-titre);
+    font-size: clamp(2.2rem, 1.6rem + 2.5vw, 3.5rem);
+    line-height: 1;
+    text-decoration: none;
+    color: var(--vert);
+    white-space: nowrap;
+  }
+
+  .contact-accueil__tel:hover { text-decoration: underline; }
+
+  .contact-accueil__coord .bouton { margin-top: var(--s-4); }
+</style>

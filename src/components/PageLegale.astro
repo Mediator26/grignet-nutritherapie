@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import PageTitre from './PageTitre.astro';
+interface Props { titre: string; description: string; miseAJour: string }
+const { titre, description, miseAJour } = Astro.props;
+---
+<Base title={titre} description={description}>
+  <PageTitre surtitre="Informations légales" titre={titre} chapo={`Dernière mise à jour : ${miseAJour}`} />
+  <section class="section">
+    <div class="conteneur">
+      <div class="prose lecture legal">
+        <slot />
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .legal :global(h2) { font-size: var(--t-h3); }
+  .legal :global(h2:first-child) { margin-top: 0; }
+</style>

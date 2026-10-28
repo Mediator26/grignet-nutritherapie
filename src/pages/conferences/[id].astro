@@ -1,0 +1,96 @@
+---
+import { url } from '../../lib/url';
+import { Image } from 'astro:assets';
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { site } from '../../data/site';
+import { formatDateLongue, isoDate, type Conference } from '../../lib/conferences';
+
+export async function getStaticPaths() {
+  const conferences = await getCollection('conferences');
+  return conferences.map((conference) => ({ params: { id: conference.id }, props: { conference } }));
+}
+
+interface Props { conference: Conference }
+const { conference } = Astro.props;
+const c = conference.data;
+const { Content } = await render(conference);
+const passee = c.date.getTime() < Date.now();
+const complet = c.statut === 'complet';
+const sujet = encodeURIComponent(`Inscription conférence : ${c.titre}`);
+
+const event = {
+  '@context': 'https://schema.org',
+  '@type': 'Event',
+  name: c.titre,
+  description: c.accroche,
+  startDate: c.date.toISOString(),
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  eventStatus: 'https://schema.org/EventScheduled',
+  location: { '@type': 'Place', name: c.lieu, address: { '@type': 'PostalAddress', addressLocality: c.ville, addressCountry: 'BE' } },
+  organizer: { '@type': 'Person', name: site.name, url: Astro.site?.toString() },
+};
+---
+<Base title={c.titre} description={c.accroche ?? c.titre} image={c.affiche} jsonLd={event}>
+  <article class="section">
+    <div class="conteneur grille conf">
+      <header class="conf__entete">
+        <p class="surtitre">
+          Conférence · <time datetime={isoDate(c.date)}>{formatDateLongue(c.date)}</time>
+          {passee ? ' · passée' : complet ? ' · complet' : ''}
+        </p>
+        <h1>{c.titre}</h1>
+        {c.accroche && <p class="chapo">{c.accroche}</p>}
+      </header>
+
+      <div class="conf__texte prose">
+        <Content />
+      </div>
+
+      <aside class="conf__infos">
+        {c.affiche && (
+          <Image src={c.affiche} alt={c.afficheAlt ?? ''} widths={[400, 640]} sizes="(min-width: 64em) 30vw, 92vw" />
+        )}
+        <dl class="fiche">
+          <div><dt>Date</dt><dd>{formatDateLongue(c.date)}, {c.heure}</dd></div>
+          <div><dt>Lieu</dt><dd>{c.lieu}, {c.ville}</dd></div>
+          {c.prix && <div><dt>Participation</dt><dd>{c.prix}</dd></div>}
+          {!passee && c.inscription && <div><dt>Inscription</dt><dd>{c.inscription}</dd></div>}
+        </dl>
+        {!passee && !complet && (
+          <div class="actions">
+            <a class="bouton" href={`mailto:${site.email}?subject=${sujet}`}>Réserver par e-mail</a>
+            <a class="bouton bouton--contour" href={site.smsHref}>Par SMS</a>
+          </div>
+        )}
+        <p><a href={url('/conferences/')}>Toutes les conférences</a></p>
+      </aside>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .conf__entete,
+  .conf__texte,
+  .conf__infos { grid-column: 1 / -1; }
+
+  @media (min-width: 64em) {
+    .conf__entete { grid-column: 1 / span 9; }
+    .conf__texte { grid-column: 1 / span 7; }
+    .conf__infos { grid-column: 9 / span 4; grid-row: 2 / span 2; }
+  }
+
+  .conf__entete { margin-bottom: var(--s-6); }
+
+  .conf__infos { margin-top: var(--s-6); }
+
+  @media (min-width: 64em) { .conf__infos { margin-top: 0; } }
+
+  .conf__infos img { width: 100%; margin-bottom: var(--s-5); }
+
+  .conf__infos .actions { margin-block: var(--s-5); }
+
+  @media (min-width: 64em) {
+    .conf__infos :global(.fiche > div) { grid-template-columns: 1fr; gap: var(--s-1); }
+  }
+</style>

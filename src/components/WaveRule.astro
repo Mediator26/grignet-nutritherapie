@@ -1,0 +1,17 @@
+---
+// Le trait ondulé rouge : réinterprétation de la vague de ses visuels.
+// À utiliser avec parcimonie (2 ou 3 fois sur le site).
+interface Props { class?: string }
+const { class: className = '' } = Astro.props;
+---
+<svg class:list={['vague', className]} viewBox="0 0 600 24" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0 16C100 2 180 2 300 12s210 12 300-4" fill="none" stroke="currentColor" stroke-width="2.5" vector-effect="non-scaling-stroke" />
+</svg>
+<style>
+  .vague {
+    display: block;
+    width: 100%;
+    height: 1.5rem;
+    color: var(--rouge);
+  }
+</style>

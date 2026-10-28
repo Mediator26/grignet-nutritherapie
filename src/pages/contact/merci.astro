@@ -1,0 +1,10 @@
+---
+import { url } from '../../lib/url';
+import Base from '../../layouts/Base.astro';
+import PageTitre from '../../components/PageTitre.astro';
+---
+<Base title="Message envoyé" noindex>
+  <PageTitre surtitre="Contact" titre="Merci, votre message est bien parti." chapo="Je vous réponds personnellement dès que possible.">
+    <p style="margin-top: var(--s-6)"><a class="bouton" href={url('/')}>Retour à l’accueil</a></p>
+  </PageTitre>
+</Base>

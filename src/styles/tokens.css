@@ -1,0 +1,60 @@
+/*
+  Jetons de design — « La veste verte et le trait rouge »
+  Couleurs relevées sur les visuels de Véronique (#016662, #009180, #D63640),
+  ajustées pour garantir les contrastes WCAG sur écran.
+*/
+:root {
+  /* Couleurs de marque */
+  --vert: #0b5550;          /* vert pétrole : fonds forts, boutons — 8.6:1 sur blanc */
+  --vert-fonce: #083f3b;    /* survol des boutons */
+  --emeraude: #009180;      /* aplats, focus, détails (jamais pour du texte courant) */
+  --emeraude-clair: #a9d9d2;/* texte secondaire et focus sur fond vert */
+  --vert-brume: #e6efed;    /* fond de section discret */
+  --rouge: #c8323b;         /* signature, utilisée avec parcimonie */
+  --bordeaux: #8e1f1b;      /* texte rouge lisible */
+
+  /* Neutres */
+  --papier: #f7f6f3;
+  --blanc: #ffffff;
+  --encre: #1c2422;
+  --gris: #5a6663;
+  --filet: #d5dad8;
+
+  /* Typographie */
+  --font-titre: 'Newsreader Variable', 'Iowan Old Style', Georgia, serif;
+  --font-texte: 'Atkinson Hyperlegible Next', 'Segoe UI', system-ui, sans-serif;
+
+  --t-xs: 0.875rem;
+  --t-s: 1rem;
+  --t-m: 1.125rem;                               /* corps de texte (18 px) */
+  --t-l: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);  /* chapô */
+  --t-h3: clamp(1.4rem, 1.2rem + 0.8vw, 1.75rem);
+  --t-h2: clamp(1.9rem, 1.5rem + 1.8vw, 2.9rem);
+  --t-h1: clamp(2.5rem, 1.7rem + 3.8vw, 4.75rem);
+  --t-geant: clamp(5rem, 3rem + 9vw, 11rem);     /* chiffres d'affiche */
+
+  /* Espacements */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --s-8: 4.5rem;
+  --s-9: 7rem;
+  --section: clamp(var(--s-8), 8vw, var(--s-9));
+
+  /* Mise en page */
+  --largeur: 76rem;
+  --lecture: 40rem;
+  --gouttiere: clamp(1rem, 4vw, 3rem);
+  --rayon: 2px;
+  --transition: 150ms ease;
+}
+
+@media (min-width: 64em) {
+  :root {
+    --t-m: 1.1875rem;
+  }
+}

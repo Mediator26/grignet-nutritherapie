@@ -1,0 +1,25 @@
+---
+// Pictogramme redessiné d'après le logo des réseaux sociaux (à faire valider ou
+// remplacer par le fichier original). Il hérite de la couleur du texte.
+interface Props { size?: number; title?: string }
+const { size = 40, title } = Astro.props;
+---
+<svg
+  class="logo"
+  width={size}
+  height={size * 0.8}
+  viewBox="0 0 100 80"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="4.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  role={title ? 'img' : undefined}
+  aria-hidden={title ? undefined : 'true'}
+>
+  {title && <title>{title}</title>}
+  <path d="M50 5c11 8 12 26 0 36C38 31 39 13 50 5Z" />
+  <path d="M50 14v26M50 25l6-6M50 25l-6-6" />
+  <path d="M43 36C33 26 20 24 9 28c6 22 22 40 41 46 19-6 35-24 41-46-11-4-24-2-34 8" />
+  <path d="M57 45 41 68" />
+</svg>

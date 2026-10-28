@@ -1,0 +1,145 @@
+---
+import { url } from '../lib/url';
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageTitre from '../components/PageTitre.astro';
+import ACompleter from '../components/ACompleter.astro';
+import WaveRule from '../components/WaveRule.astro';
+import { site } from '../data/site';
+import conference from '../assets/photos/conference-cowor-coeur.jpg';
+import poivrons from '../assets/photos/poivrons-navets.jpg';
+---
+<Base
+  title="À propos"
+  description="Qui est Véronique Grignet, nutrithérapeute et éducatrice de santé à Mons : son parcours, ses formations et sa façon d'accompagner."
+>
+  <PageTitre
+    surtitre="À propos"
+    titre="Véronique Grignet, éducatrice de santé."
+    chapo="« Je vais vous guider vers un changement alimentaire durable, à votre rythme. » C'est ainsi que je présente mon travail, et c'est le fil de tout ce que je fais : consultations, conférences et recettes."
+  />
+
+  <section class="section">
+    <div class="conteneur grille apropos">
+      <div class="apropos__portrait">
+        <ACompleter label="Photo à fournir">
+          <p>Portrait de Véronique en haute définition (format vertical, au moins 1200 px de haut). Celui des réseaux sociaux est trop petit pour ce format.</p>
+        </ACompleter>
+      </div>
+
+      <div class="apropos__texte prose">
+        <h2>Mon parcours</h2>
+        <ACompleter>
+          <p>Son histoire : ce qui l'a amenée à la nutrithérapie, son métier précédent éventuel, depuis quand elle exerce à Mons.</p>
+        </ACompleter>
+
+        <h2>Mes formations</h2>
+        <ACompleter>
+          <p>Liste des formations et certifications réellement suivies (école, intitulé exact, année). Aucun diplôme ne sera affiché sans validation.</p>
+        </ACompleter>
+
+        <h2>Ma façon d’accompagner</h2>
+        <p>
+          Je me définis avant tout comme une éducatrice de santé. Mon rôle est de vous aider à comprendre
+          comment votre alimentation et votre hygiène de vie agissent sur votre santé, pour que vous
+          puissiez faire vos propres choix, durablement.
+        </p>
+        <p>
+          J’aime rendre les sujets complexes accessibles : le microbiote, l’inflammation, le sommeil ou le
+          vieillissement. Et j’aime tout autant montrer, recette à l’appui, que bien manger peut rester
+          simple et gourmand.
+        </p>
+        <ACompleter label="À valider">
+          <p>Ces deux paragraphes s'appuient sur sa bio et ses publications. À relire et compléter avec ses propres mots.</p>
+        </ACompleter>
+      </div>
+    </div>
+  </section>
+
+  <section class="section sur-brume">
+    <div class="conteneur grille ailleurs">
+      <figure class="ailleurs__photo">
+        <Image src={conference} alt="Véronique Grignet donnant une conférence devant un public assis autour d’une grande table, au Cowor-Coeur." widths={[400, 640]} sizes="(min-width: 64em) 45vw, 92vw" />
+        <figcaption class="legende">Conférence « Vieillir oui… mais mieux ! », Cowor-Coeur, octobre 2026.</figcaption>
+      </figure>
+      <div class="ailleurs__texte">
+        <span class="surtitre">En dehors des consultations</span>
+        <h2>Transmettre, aussi en groupe.</h2>
+        <p>
+          J’anime des conférences grand public dans la région de Mons, sur des thèmes
+          comme l’axe intestin-cerveau ou le bien vieillir. Des explications accessibles et des conseils
+          concrets à appliquer chez soi.
+        </p>
+        <p><a href={url('/conferences/')}>Voir les prochaines conférences</a></p>
+        <WaveRule />
+        <p class="secondaire">
+          Mon travail a aussi fait l’objet d’un article dans <strong>La Province / Sudinfo</strong> :{' '}
+          « Pour redécouvrir les légumes d’automne et d’hiver », par Lucie Jannet, octobre 2026.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="conteneur grille suite">
+      <div class="suite__texte">
+        <h2>On en parle ?</h2>
+        <p class="chapo">Pour une question ou un premier rendez-vous, appelez-moi au <a href={site.phoneHref}>{site.phone}</a>.</p>
+        <div class="actions">
+          <a class="bouton" href={url('/accompagnement/')}>Découvrir l’accompagnement</a>
+          <a class="bouton bouton--contour" href={url('/contact/')}>Me contacter</a>
+        </div>
+      </div>
+      <figure class="suite__photo">
+        <Image src={poivrons} alt="Poivrons colorés, navets et feuilles vertes fraîchement récoltés, sur une table en bois." widths={[359]} sizes="(min-width: 64em) 22vw, 60vw" />
+      </figure>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .apropos__portrait,
+  .apropos__texte { grid-column: 1 / -1; }
+
+  @media (min-width: 64em) {
+    .apropos__portrait { grid-column: 1 / span 4; }
+    .apropos__texte { grid-column: 6 / span 7; }
+  }
+
+  .apropos__portrait :global(.a-completer) {
+    aspect-ratio: 3 / 4;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  @media (max-width: 63.99em) {
+    .apropos__portrait :global(.a-completer) { aspect-ratio: auto; }
+  }
+
+  .apropos__texte h2:first-child { margin-top: 0; }
+
+  .ailleurs__photo,
+  .ailleurs__texte { grid-column: 1 / -1; margin: 0; }
+
+  .ailleurs__texte { margin-top: var(--s-6); }
+
+  @media (min-width: 64em) {
+    .ailleurs__photo { grid-column: 1 / span 6; }
+    .ailleurs__texte { grid-column: 8 / span 5; margin-top: 0; align-self: center; }
+  }
+
+  .ailleurs__photo img { width: 100%; }
+
+  .ailleurs__texte :global(.vague) { margin-block: var(--s-5); width: 8rem; }
+
+  .suite__texte,
+  .suite__photo { grid-column: 1 / -1; margin: 0; }
+
+  .suite__photo { margin-top: var(--s-6); max-width: 18rem; }
+
+  @media (min-width: 64em) {
+    .suite__texte { grid-column: 1 / span 7; align-self: center; }
+    .suite__photo { grid-column: 10 / span 3; margin-top: 0; }
+  }
+</style>

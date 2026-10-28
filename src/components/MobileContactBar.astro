@@ -1,0 +1,42 @@
+---
+import { url } from '../lib/url';
+import { site } from '../data/site';
+---
+<div class="barre-contact" aria-label="Contact rapide">
+  <a href={site.phoneHref}>Appeler</a>
+  <a href={site.smsHref}>SMS</a>
+  <a href={url('/contact/')}>Écrire</a>
+</div>
+
+<style>
+  .barre-contact { display: none; }
+
+  @media (max-width: 47.99em) {
+    .barre-contact {
+      position: fixed;
+      inset: auto 0 0 0;
+      z-index: 40;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      background: var(--vert);
+      border-top: 1px solid var(--vert-fonce);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .barre-contact a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 3.5rem;
+      color: var(--blanc);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .barre-contact a + a { border-left: 1px solid rgba(255, 255, 255, 0.25); }
+
+    .barre-contact a:focus-visible { outline-color: var(--emeraude-clair); outline-offset: -4px; }
+
+    :global(body) { padding-bottom: 3.5rem; }
+  }
+</style>

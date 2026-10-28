@@ -1,0 +1,273 @@
+---
+import { url } from '../../lib/url';
+import Base from '../../layouts/Base.astro';
+import PageTitre from '../../components/PageTitre.astro';
+import ACompleter from '../../components/ACompleter.astro';
+import { site } from '../../data/site';
+
+const formulaireConfigure = !site.web3formsKey.startsWith('A_REMPLACER');
+---
+<Base
+  title="Contact"
+  description="Contacter Véronique Grignet, nutrithérapeute à Mons : téléphone, SMS, e-mail ou formulaire."
+>
+  <PageTitre
+    surtitre="Contact"
+    titre="Parlons-en."
+    chapo="Pour une question, un rendez-vous ou une inscription à une conférence. Je vous réponds personnellement."
+  />
+
+  <section class="section">
+    <div class="conteneur grille contact">
+      <div class="contact__coord">
+        <h2 class="contact__titre">Par téléphone ou SMS</h2>
+        <p class="contact__tel"><a href={site.phoneHref}>{site.phone}</a></p>
+        <p><a class="bouton bouton--contour" href={site.smsHref}>Envoyer un SMS</a></p>
+
+        <h2 class="contact__titre">Par e-mail</h2>
+        <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+
+        <h2 class="contact__titre">Où</h2>
+        <p>{site.city}, {site.region}</p>
+        <ACompleter>
+          <p>Adresse de consultation (si elle souhaite la rendre publique) et horaires ou jours de disponibilité.</p>
+        </ACompleter>
+
+        <h2 class="contact__titre">Sur les réseaux</h2>
+        <p>
+          <a href={site.instagram} rel="noopener">Instagram</a> ·{' '}
+          <a href={site.facebook} rel="noopener">Facebook</a>
+        </p>
+      </div>
+
+      <div class="contact__formulaire">
+        <h2>Écrire un message</h2>
+        <p class="secondaire">Tous les champs sont obligatoires, sauf le téléphone.</p>
+
+        {!formulaireConfigure && (
+          <ACompleter label="Formulaire non configuré">
+            <p>La clé Web3Forms n'est pas encore renseignée dans <code>src/data/site.ts</code> : les messages ne peuvent pas être envoyés. Voir le README.</p>
+          </ACompleter>
+        )}
+
+        <form class="formulaire" action="https://api.web3forms.com/submit" method="POST" novalidate>
+          <input type="hidden" name="access_key" value={site.web3formsKey} />
+          <input type="hidden" name="subject" value="Nouveau message depuis le site" />
+          <input type="hidden" name="from_name" value="Site grignet-nutritherapie.be" />
+          <input type="hidden" name="redirect" value={new URL(url('/contact/merci/'), Astro.site).toString()} />
+          <input type="checkbox" name="botcheck" class="visually-hidden" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+          <div class="champ">
+            <label for="nom">Nom et prénom</label>
+            <input id="nom" name="nom" type="text" autocomplete="name" required />
+          </div>
+
+          <div class="champ">
+            <label for="email">Adresse e-mail</label>
+            <input id="email" name="email" type="email" autocomplete="email" required />
+          </div>
+
+          <div class="champ">
+            <label for="telephone">Téléphone <span class="facultatif">(facultatif)</span></label>
+            <input id="telephone" name="telephone" type="tel" autocomplete="tel" />
+          </div>
+
+          <fieldset class="champ">
+            <legend>Votre demande concerne</legend>
+            <div class="choix">
+              <label><input type="radio" name="objet" value="Consultation" required checked /> Une consultation</label>
+              <label><input type="radio" name="objet" value="Conférence" /> Une conférence</label>
+              <label><input type="radio" name="objet" value="Autre" /> Autre chose</label>
+            </div>
+          </fieldset>
+
+          <div class="champ">
+            <label for="message">Votre message</label>
+            <textarea id="message" name="message" rows="6" required></textarea>
+          </div>
+
+          <div class="champ champ--case">
+            <label>
+              <input type="checkbox" name="consentement" value="oui" required />
+              <span>J’accepte que mes coordonnées soient utilisées pour répondre à ma demande.{' '}
+              <a href={url('/confidentialite/')}>En savoir plus</a></span>
+            </label>
+          </div>
+
+          <p class="formulaire__statut" role="status" aria-live="polite"></p>
+
+          <button class="bouton" type="submit">Envoyer le message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Validation lisible en français, puis envoi sans quitter la page.
+  // Sans JavaScript, le formulaire est envoyé normalement et redirige vers /contact/merci/.
+  const form = document.querySelector<HTMLFormElement>('.formulaire');
+  const statut = form?.querySelector<HTMLElement>('.formulaire__statut');
+
+  const messages: Record<string, string> = {
+    nom: 'Indiquez votre nom.',
+    email: 'Indiquez une adresse e-mail valide (ex. nom@exemple.be).',
+    message: 'Écrivez votre message.',
+    consentement: 'Cochez la case pour que je puisse vous répondre.',
+  };
+
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!statut) return;
+    form.querySelectorAll('.erreur').forEach((el) => el.remove());
+    form.querySelectorAll('[aria-invalid]').forEach((el) => el.removeAttribute('aria-invalid'));
+
+    const invalides = [...form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input[required], textarea[required]')]
+      .filter((el) => !el.checkValidity() && messages[el.name]);
+
+    if (invalides.length) {
+      invalides.forEach((el) => {
+        const id = `erreur-${el.name}`;
+        const p = document.createElement('p');
+        p.className = 'erreur';
+        p.id = id;
+        p.textContent = messages[el.name];
+        el.setAttribute('aria-invalid', 'true');
+        el.setAttribute('aria-describedby', id);
+        el.closest('.champ')?.append(p);
+      });
+      invalides[0].focus();
+      statut.textContent = 'Certains champs sont à compléter.';
+      return;
+    }
+
+    const bouton = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    bouton?.setAttribute('disabled', '');
+    statut.textContent = 'Envoi en cours…';
+
+    try {
+      const reponse = await fetch(form.action, {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: new FormData(form),
+      });
+      const resultat = await reponse.json();
+      if (!reponse.ok || !resultat.success) throw new Error(resultat.message);
+      form.reset();
+      statut.textContent = 'Merci, votre message est bien parti. Je vous réponds au plus vite.';
+    } catch {
+      statut.textContent =
+        'Le message n’a pas pu être envoyé. Vous pouvez m’écrire directement à contact@grignet-nutritherapie.be ou m’appeler au 0456 58 79 70.';
+    } finally {
+      bouton?.removeAttribute('disabled');
+    }
+  });
+</script>
+
+<style>
+  .contact__coord,
+  .contact__formulaire { grid-column: 1 / -1; }
+
+  @media (min-width: 64em) {
+    .contact__coord { grid-column: 1 / span 5; }
+    .contact__formulaire { grid-column: 7 / span 6; }
+  }
+
+  .contact__formulaire { margin-top: var(--s-7); }
+
+  @media (min-width: 64em) { .contact__formulaire { margin-top: 0; } }
+
+  .contact__titre {
+    font-family: var(--font-texte);
+    font-size: var(--t-xs);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gris);
+    margin: var(--s-6) 0 var(--s-2);
+  }
+
+  .contact__titre:first-child { margin-top: 0; }
+
+  .contact__tel {
+    font-family: var(--font-titre);
+    font-size: clamp(2.2rem, 1.6rem + 2.5vw, 3.5rem);
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .contact__tel a { text-decoration: none; }
+
+  .formulaire {
+    display: grid;
+    gap: var(--s-5);
+    margin-top: var(--s-5);
+    padding: clamp(var(--s-5), 4vw, var(--s-7));
+    background: var(--blanc);
+    border-top: 4px solid var(--vert);
+  }
+
+  .champ { display: grid; gap: var(--s-2); margin: 0; padding: 0; border: 0; min-width: 0; }
+
+  .champ label,
+  .champ legend { font-weight: 700; }
+
+  .facultatif { font-weight: 400; color: var(--gris); }
+
+  .champ input[type='text'],
+  .champ input[type='email'],
+  .champ input[type='tel'],
+  .champ textarea {
+    width: 100%;
+    min-height: 3.25rem;
+    padding: var(--s-3) var(--s-4);
+    border: 2px solid #8a9491;
+    border-radius: var(--rayon);
+    background: var(--blanc);
+    color: var(--encre);
+    font: inherit;
+  }
+
+  .champ textarea { resize: vertical; }
+
+  .champ input:focus-visible,
+  .champ textarea:focus-visible { border-color: var(--vert); }
+
+  .champ input[aria-invalid='true'],
+  .champ textarea[aria-invalid='true'] { border-color: var(--rouge); }
+
+  .choix { display: grid; gap: var(--s-2); margin-top: var(--s-2); }
+
+  .choix label,
+  .champ--case label {
+    display: flex;
+    gap: var(--s-3);
+    align-items: flex-start;
+    font-weight: 400;
+    cursor: pointer;
+  }
+
+  .choix input,
+  .champ--case input {
+    flex: none;
+    width: 1.375rem;
+    height: 1.375rem;
+    margin-top: 0.15em;
+    accent-color: var(--vert);
+  }
+
+  .formulaire :global(.erreur) {
+    margin: 0;
+    color: var(--bordeaux);
+    font-weight: 700;
+    font-size: var(--t-s);
+  }
+
+  .formulaire__statut { margin: 0; font-weight: 700; color: var(--vert); }
+
+  .formulaire__statut:empty { display: none; }
+
+  .formulaire .bouton { justify-self: start; }
+
+  .formulaire .bouton[disabled] { opacity: 0.6; cursor: wait; }
+</style>

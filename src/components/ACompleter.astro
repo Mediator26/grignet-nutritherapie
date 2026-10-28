@@ -1,0 +1,9 @@
+---
+// Emplacement visible pour un contenu manquant, à remplacer après validation.
+interface Props { label?: string }
+const { label = 'À compléter' } = Astro.props;
+---
+<div class="a-completer" role="note">
+  <span class="a-completer__etiquette">{label}</span>
+  <slot />
+</div>

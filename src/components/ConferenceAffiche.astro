@@ -1,0 +1,95 @@
+---
+import { url } from '../lib/url';
+// Grand bloc vert façon affiche, pour la prochaine conférence.
+import { site } from '../data/site';
+import { formatJour, formatMoisAnnee, formatJourSemaine, isoDate, type Conference } from '../lib/conferences';
+
+interface Props { conference: Conference; titreNiveau?: 'h2' | 'h3' }
+const { conference, titreNiveau = 'h2' } = Astro.props;
+const c = conference.data;
+const Titre = titreNiveau;
+const sujet = encodeURIComponent(`Inscription conférence du ${formatJour(c.date)} ${formatMoisAnnee(c.date)}`);
+const complet = c.statut === 'complet';
+---
+<section class="affiche sur-vert" aria-labelledby={`conf-${conference.id}`}>
+  <div class="conteneur affiche__grille">
+    <p class="affiche__date">
+      <time datetime={isoDate(c.date)}>
+        <span class="affiche__jour">{formatJour(c.date)}</span>
+        <span class="affiche__mois">{formatMoisAnnee(c.date)}</span>
+        <span class="affiche__semaine">{formatJourSemaine(c.date)} · {c.heure}</span>
+      </time>
+    </p>
+
+    <div class="affiche__texte">
+      <span class="surtitre">Prochaine conférence{complet && ' — complet'}</span>
+      <Titre id={`conf-${conference.id}`} class="affiche__titre">{c.titre}</Titre>
+      {c.accroche && <p class="chapo">{c.accroche}</p>}
+
+      <dl class="fiche">
+        <div><dt>Lieu</dt><dd>{c.lieu}, {c.ville}</dd></div>
+        {c.prix && <div><dt>Participation</dt><dd>{c.prix}</dd></div>}
+        {c.inscription && <div><dt>Inscription</dt><dd>{c.inscription}</dd></div>}
+      </dl>
+
+      <div class="actions">
+        {!complet && (
+          <a class="bouton" href={`mailto:${site.email}?subject=${sujet}`}>Réserver ma place par e-mail</a>
+        )}
+        <a class="bouton bouton--contour" href={url(`/conferences/${conference.id}/`)}>Lire le programme</a>
+      </div>
+      {!complet && <p class="affiche__sms">Ou par SMS au <a href={site.smsHref}>{site.phone}</a>.</p>}
+    </div>
+  </div>
+</section>
+
+<style>
+  .affiche {
+    padding-block: var(--section);
+  }
+
+  .affiche__grille {
+    display: grid;
+    gap: var(--s-6);
+  }
+
+  @media (min-width: 64em) {
+    .affiche__grille {
+      grid-template-columns: 5fr 7fr;
+      gap: var(--s-8);
+      align-items: start;
+    }
+  }
+
+  .affiche__date { margin: 0; }
+
+  .affiche__date time { display: grid; }
+
+  .affiche__jour {
+    font-family: var(--font-titre);
+    font-size: var(--t-geant);
+    font-weight: 400;
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+  }
+
+  .affiche__mois {
+    font-family: var(--font-titre);
+    font-size: var(--t-h3);
+    font-style: italic;
+    margin-top: var(--s-3);
+  }
+
+  .affiche__semaine {
+    margin-top: var(--s-2);
+    color: var(--emeraude-clair);
+  }
+
+  .affiche__semaine::first-letter { text-transform: uppercase; }
+
+  .affiche__titre { font-size: var(--t-h2); }
+
+  .affiche .fiche { margin-block: var(--s-6); }
+
+  .affiche__sms { margin-top: var(--s-4); color: var(--emeraude-clair); }
+</style>

@@ -1,0 +1,14 @@
+---
+import { url } from '../lib/url';
+import Base from '../layouts/Base.astro';
+import PageTitre from '../components/PageTitre.astro';
+import { site } from '../data/site';
+---
+<Base title="Page introuvable" noindex>
+  <PageTitre surtitre="Erreur 404" titre="Cette page n’existe pas (ou plus)." chapo="Le lien est peut-être ancien ou mal recopié.">
+    <div class="actions" style="margin-top: var(--s-6)">
+      <a class="bouton" href={url('/')}>Retour à l’accueil</a>
+      <a class="bouton bouton--contour" href={site.phoneHref}>Appeler le {site.phone}</a>
+    </div>
+  </PageTitre>
+</Base>

@@ -1,0 +1,349 @@
+@import '@fontsource-variable/newsreader/opsz.css';
+@import '@fontsource-variable/newsreader/opsz-italic.css';
+@import '@fontsource/atkinson-hyperlegible-next/400.css';
+@import '@fontsource/atkinson-hyperlegible-next/400-italic.css';
+@import '@fontsource/atkinson-hyperlegible-next/700.css';
+@import './tokens.css';
+
+/* ---------- Base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: 6rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--papier);
+  color: var(--encre);
+  font-family: var(--font-texte);
+  font-size: var(--t-m);
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-titre);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin: 0 0 var(--s-4);
+  text-wrap: balance;
+}
+
+h1 { font-size: var(--t-h1); line-height: 1.02; letter-spacing: -0.02em; }
+h2 { font-size: var(--t-h2); }
+h3 { font-size: var(--t-h3); line-height: 1.2; }
+
+p,
+ul,
+ol,
+dl {
+  margin: 0 0 var(--s-4);
+}
+
+p { text-wrap: pretty; }
+
+em { font-style: italic; }
+
+strong { font-weight: 700; }
+
+/* ---------- Liens & focus ---------- */
+a {
+  color: var(--vert);
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition: color var(--transition), text-decoration-color var(--transition);
+}
+
+a:hover {
+  color: var(--bordeaux);
+  text-decoration-color: var(--rouge);
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 3px solid var(--emeraude);
+  outline-offset: 3px;
+  border-radius: var(--rayon);
+}
+
+.sur-vert :focus-visible {
+  outline-color: var(--emeraude-clair);
+}
+
+.lien-evitement {
+  position: absolute;
+  left: var(--s-4);
+  top: -10rem;
+  z-index: 100;
+  padding: var(--s-3) var(--s-4);
+  background: var(--vert);
+  color: var(--blanc);
+}
+
+.lien-evitement:focus {
+  top: var(--s-4);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- Mise en page ---------- */
+.conteneur {
+  width: 100%;
+  max-width: calc(var(--largeur) + 2 * var(--gouttiere));
+  margin-inline: auto;
+  padding-inline: var(--gouttiere);
+}
+
+.section {
+  padding-block: var(--section);
+}
+
+.grille {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: var(--s-5);
+}
+
+@media (min-width: 48em) {
+  .grille { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+}
+
+@media (min-width: 64em) {
+  .grille { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--s-6); }
+}
+
+.lecture {
+  max-width: var(--lecture);
+}
+
+.sur-vert {
+  background: var(--vert);
+  color: var(--blanc);
+}
+
+.sur-vert a { color: var(--blanc); }
+.sur-vert a:hover { color: var(--blanc); text-decoration-color: var(--rouge); }
+
+.sur-brume {
+  background: var(--vert-brume);
+}
+
+/* ---------- Typographie éditoriale ---------- */
+.surtitre {
+  display: block;
+  margin-bottom: var(--s-4);
+  font-family: var(--font-texte);
+  font-size: var(--t-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--vert);
+}
+
+.sur-vert .surtitre { color: var(--emeraude-clair); }
+
+.chapo {
+  font-size: var(--t-l);
+  line-height: 1.5;
+  max-width: 34em;
+}
+
+.secondaire {
+  color: var(--gris);
+}
+
+.legende {
+  margin-top: var(--s-3);
+  font-size: var(--t-xs);
+  line-height: 1.45;
+  color: var(--gris);
+}
+
+.legende::before {
+  content: '';
+  display: inline-block;
+  width: 1.5em;
+  height: 1px;
+  margin-right: 0.6em;
+  vertical-align: middle;
+  background: var(--rouge);
+}
+
+/* ---------- Boutons ---------- */
+.bouton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: 3.25rem;
+  padding: var(--s-3) var(--s-5);
+  border: 2px solid var(--vert);
+  border-radius: var(--rayon);
+  background: var(--vert);
+  color: var(--blanc);
+  font: 700 var(--t-s) / 1.2 var(--font-texte);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--transition), color var(--transition), border-color var(--transition);
+}
+
+.bouton:hover {
+  background: var(--vert-fonce);
+  border-color: var(--vert-fonce);
+  color: var(--blanc);
+  text-decoration: none;
+}
+
+.bouton--contour {
+  background: transparent;
+  color: var(--vert);
+}
+
+.bouton--contour:hover {
+  background: var(--vert);
+  color: var(--blanc);
+}
+
+.sur-vert .bouton {
+  background: var(--blanc);
+  border-color: var(--blanc);
+  color: var(--vert);
+}
+
+.sur-vert .bouton:hover {
+  background: var(--vert-brume);
+  border-color: var(--vert-brume);
+  color: var(--vert-fonce);
+}
+
+.sur-vert .bouton--contour {
+  background: transparent;
+  color: var(--blanc);
+}
+
+.sur-vert .bouton--contour:hover {
+  background: var(--blanc);
+  color: var(--vert);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-4);
+}
+
+/* ---------- Contenus à compléter ---------- */
+.a-completer {
+  margin: 0 0 var(--s-4);
+  padding: var(--s-4) var(--s-5);
+  border: 2px dashed var(--rouge);
+  background: var(--blanc);
+  color: var(--bordeaux);
+  font-size: var(--t-s);
+  line-height: 1.5;
+}
+
+.a-completer > :last-child { margin-bottom: 0; }
+
+.a-completer__etiquette {
+  display: block;
+  margin-bottom: var(--s-1);
+  font-size: var(--t-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sur-vert .a-completer {
+  background: transparent;
+  border-color: #f3b7b9;
+  color: var(--blanc);
+}
+
+/* ---------- Prose (Markdown) ---------- */
+.prose > * + * { margin-top: var(--s-4); }
+.prose h2 { font-size: var(--t-h3); margin-top: var(--s-6); }
+.prose ul { padding-left: 1.2em; }
+.prose li + li { margin-top: var(--s-2); }
+.prose li::marker { color: var(--rouge); }
+
+/* ---------- Listes de faits (infos pratiques) ---------- */
+.fiche {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin: 0;
+  border-top: 1px solid var(--filet);
+}
+
+.fiche > div {
+  display: grid;
+  gap: var(--s-1);
+  padding-block: var(--s-4);
+  border-bottom: 1px solid var(--filet);
+}
+
+@media (min-width: 40em) {
+  .fiche > div {
+    grid-template-columns: 11rem 1fr;
+    gap: var(--s-5);
+  }
+}
+
+.fiche dt {
+  font-size: var(--t-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gris);
+  padding-top: 0.2em;
+}
+
+.fiche dd { margin: 0; }
+
+.sur-vert .fiche,
+.sur-vert .fiche > div { border-color: rgba(255, 255, 255, 0.25); }
+.sur-vert .fiche dt { color: var(--emeraude-clair); }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Un numéro de téléphone ne se coupe jamais */
+a[href^='tel:'] { white-space: nowrap; }

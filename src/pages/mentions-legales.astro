@@ -1,0 +1,39 @@
+---
+import PageLegale from '../components/PageLegale.astro';
+import ACompleter from '../components/ACompleter.astro';
+import { site } from '../data/site';
+---
+<PageLegale titre="Mentions légales" description="Mentions légales du site de Véronique Grignet, nutrithérapeute à Mons." miseAJour="[À COMPLÉTER : date de mise en ligne]">
+  <h2>Éditrice du site</h2>
+  <p>
+    {site.name}, {site.title.toLowerCase()}<br />
+    Statut : <strong>[À COMPLÉTER : indépendante en personne physique / société]</strong><br />
+    Adresse du siège : <strong>[À COMPLÉTER]</strong><br />
+    Numéro d’entreprise (BCE) : <strong>[À COMPLÉTER]</strong><br />
+    Numéro de TVA : <strong>[À COMPLÉTER ou « non assujettie »]</strong><br />
+    Téléphone : <a href={site.phoneHref}>{site.phone}</a><br />
+    E-mail : <a href={`mailto:${site.email}`}>{site.email}</a>
+  </p>
+
+  <h2>Hébergement</h2>
+  <p>OVH SAS, 2 rue Kellermann, 59100 Roubaix, France — <a href="https://www.ovhcloud.com" rel="noopener">ovhcloud.com</a>.</p>
+
+  <h2>Activité</h2>
+  <p>
+    La nutrithérapie est une approche d’accompagnement et d’éducation à la santé. Les informations
+    publiées sur ce site sont données à titre général et ne constituent pas un avis médical. Elles ne
+    remplacent pas une consultation chez votre médecin.
+  </p>
+  <ACompleter>
+    <p>Formation suivie et, le cas échéant, assurance responsabilité civile professionnelle.</p>
+  </ACompleter>
+
+  <h2>Propriété intellectuelle</h2>
+  <p>
+    Les textes, photographies et visuels de ce site sont la propriété de {site.name}, sauf mention
+    contraire. Toute reproduction nécessite son accord préalable.
+  </p>
+
+  <h2>Liens externes</h2>
+  <p>Le site renvoie vers Instagram et Facebook. Ces services ont leurs propres conditions d’utilisation et règles de confidentialité.</p>
+</PageLegale>

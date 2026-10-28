@@ -1,0 +1,177 @@
+---
+import { url } from '../lib/url';
+import Base from '../layouts/Base.astro';
+import PageTitre from '../components/PageTitre.astro';
+import ACompleter from '../components/ACompleter.astro';
+import { site } from '../data/site';
+
+const etapes = [
+  {
+    titre: 'Un premier échange',
+    texte: "Par téléphone ou par SMS : vous m'expliquez ce qui vous amène, je vous dis si et comment je peux vous aider.",
+  },
+  {
+    titre: 'La première consultation',
+    texte: null,
+  },
+  {
+    titre: 'Le suivi, à votre rythme',
+    texte: null,
+  },
+];
+---
+<Base
+  title="Accompagnement"
+  description="Consultations de nutrithérapie à Mons avec Véronique Grignet : déroulement, modalités pratiques et informations importantes."
+>
+  <PageTitre
+    surtitre="Accompagnement"
+    titre="Un accompagnement personnel, pas un programme tout fait."
+    chapo="Chaque accompagnement part de votre situation, de vos habitudes et de vos objectifs. L’idée n’est pas de tout changer, mais de changer ce qui compte, durablement."
+  />
+
+  <section class="section">
+    <div class="conteneur grille deroule">
+      <div class="deroule__intro">
+        <span class="surtitre">Comment ça se passe</span>
+        <h2>En trois temps.</h2>
+      </div>
+      <ol class="deroule__etapes">
+        {etapes.map((e, i) => (
+          <li>
+            <span class="deroule__num" aria-hidden="true">{i + 1}</span>
+            <div>
+              <h3>{e.titre}</h3>
+              {e.texte ? (
+                <p>{e.texte}</p>
+              ) : (
+                <ACompleter>
+                  <p>Déroulé réel à décrire par Véronique (durée, contenu, éventuel bilan ou questionnaire).</p>
+                </ACompleter>
+              )}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section sur-brume">
+    <div class="conteneur grille pratique">
+      <div class="pratique__intro">
+        <span class="surtitre">Infos pratiques</span>
+        <h2>Lieu, durée, tarifs.</h2>
+        <p class="secondaire">Ces informations ne sont pas encore publiques : elles seront complétées avec Véronique.</p>
+      </div>
+      <dl class="fiche pratique__fiche">
+        <div><dt>Lieu</dt><dd>{site.city} — <span class="manque">adresse de consultation à compléter</span></dd></div>
+        <div><dt>À distance</dt><dd><span class="manque">Consultations en visio : oui / non, à préciser</span></dd></div>
+        <div><dt>Durée</dt><dd><span class="manque">Première consultation et suivi : à préciser</span></dd></div>
+        <div><dt>Tarifs</dt><dd><span class="manque">À compléter</span></dd></div>
+        <div><dt>Remboursement</dt><dd><span class="manque">Intervention éventuelle de certaines mutuelles : à vérifier</span></dd></div>
+        <div><dt>Rendez-vous</dt><dd>Par téléphone ou SMS au <a href={site.phoneHref}>{site.phone}</a>, ou par e-mail à <a href={`mailto:${site.email}`}>{site.email}</a>.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="conteneur grille important">
+      <div class="important__texte">
+        <span class="surtitre">Bon à savoir</span>
+        <h2>Ce que la nutrithérapie n’est pas.</h2>
+        <div class="prose">
+          <p>
+            La nutrithérapie est une approche d’accompagnement et d’éducation à la santé par
+            l’alimentation et l’hygiène de vie. Elle complète le suivi de votre médecin et des
+            professionnels de santé qui vous suivent ; elle ne le remplace pas.
+          </p>
+          <ul>
+            <li>Elle ne pose pas de diagnostic médical.</li>
+            <li>Elle ne remplace ni un traitement, ni une consultation médicale.</li>
+            <li>Ne modifiez ou n’arrêtez jamais un traitement sans l’avis de votre médecin.</li>
+          </ul>
+          <p>
+            En cas de symptômes inhabituels, persistants ou inquiétants, consultez d’abord votre médecin.
+          </p>
+        </div>
+      </div>
+      <aside class="important__contact sur-vert">
+        <h2 class="important__titre">Prendre rendez-vous</h2>
+        <p>Le plus simple : un appel ou un SMS.</p>
+        <p class="important__tel"><a href={site.phoneHref}>{site.phone}</a></p>
+        <a class="bouton" href={url('/contact/')}>Écrire un message</a>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .deroule__intro,
+  .deroule__etapes,
+  .pratique__intro,
+  .pratique__fiche,
+  .important__texte,
+  .important__contact { grid-column: 1 / -1; }
+
+  @media (min-width: 64em) {
+    .deroule__intro { grid-column: 1 / span 4; }
+    .deroule__etapes { grid-column: 6 / span 7; }
+    .pratique__intro { grid-column: 1 / span 4; }
+    .pratique__fiche { grid-column: 6 / span 7; }
+    .important__texte { grid-column: 1 / span 7; }
+    .important__contact { grid-column: 9 / span 4; align-self: start; }
+  }
+
+  .deroule__etapes {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: none;
+  }
+
+  .deroule__etapes li {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: var(--s-4);
+    padding-block: var(--s-5);
+    border-top: 1px solid var(--filet);
+  }
+
+  .deroule__num {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 2px solid var(--vert);
+    font-family: var(--font-titre);
+    font-size: 1.35rem;
+    color: var(--vert);
+  }
+
+  .deroule__etapes p { margin: 0; }
+
+  .manque {
+    color: var(--bordeaux);
+    border-bottom: 2px dashed var(--rouge);
+  }
+
+  .important__contact {
+    margin-top: var(--s-7);
+    padding: var(--s-6);
+  }
+
+  @media (min-width: 64em) {
+    .important__contact { margin-top: 0; }
+  }
+
+  .important__titre { font-size: var(--t-h3); }
+
+  .important__tel {
+    font-family: var(--font-titre);
+    font-size: 2.1rem;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  .important__tel a { text-decoration: none; }
+</style>
